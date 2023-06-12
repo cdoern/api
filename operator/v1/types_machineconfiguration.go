@@ -32,6 +32,8 @@ type MachineConfiguration struct {
 type MachineConfigurationSpec struct {
 	StaticPodOperatorSpec `json:",inline"`
 
+	InvisibleMetrics []InvisibleMetric `json:"invisibleMetrics"`
+
 	// TODO(jkyros): This is where we put our knobs and dials
 }
 
@@ -57,3 +59,22 @@ type MachineConfigurationList struct {
 	// Items contains the items
 	Items []MachineConfiguration `json:"items"`
 }
+
+type InvisibleMetric string
+
+const (
+	InvisibleMetricMCOState                   InvisibleMetric = "mcoState"
+	InvisibleMetricMCOMachineCount            InvisibleMetric = "mcoMachineCount"
+	InvisibleMetricMCOUpdatedMachineCount     InvisibleMetric = "mcoUpdatedMachineCount"
+	InvisibleMetricMCODegradedMachineCount    InvisibleMetric = "mcoDegradedMachineCounnt"
+	InvisibleMetricMCOUnavailableMachineCount InvisibleMetric = "mcoUnavailableMachineCount"
+	InvisibleMetricHostOS                     InvisibleMetric = "hostOS"
+	InvisibleMetricMCDSSHAccessed             InvisibleMetric = "mcdSSHAccessed"
+	InvisibleMetricMCDPivotErr                InvisibleMetric = "mcdPivotErr"
+	InvisibleMetricMCDState                   InvisibleMetric = "mcdState"
+	InvisibleMetricKubeletHealthState         InvisibleMetric = "kubeletHealthState"
+	InvisibleMetricMCDRebootErr               InvisibleMetric = "mcdRebootErr"
+	InvisibleMetricMCDUpdateState             InvisibleMetric = "mcdUpdateState"
+	InvisibleMetricOSImageURLOverride         InvisibleMetric = "osImageURLOverride"
+	InvisibleMetricMCCDrainErr                InvisibleMetric = "mccDrainErr"
+)
