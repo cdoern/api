@@ -2836,6 +2836,11 @@ func (in *MachineConfigurationList) DeepCopyObject() runtime.Object {
 func (in *MachineConfigurationSpec) DeepCopyInto(out *MachineConfigurationSpec) {
 	*out = *in
 	in.StaticPodOperatorSpec.DeepCopyInto(&out.StaticPodOperatorSpec)
+	if in.InvisibleMetrics != nil {
+		in, out := &in.InvisibleMetrics, &out.InvisibleMetrics
+		*out = make([]InvisibleMetric, len(*in))
+		copy(*out, *in)
+	}
 	return
 }
 

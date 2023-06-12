@@ -44528,8 +44528,22 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Format:      "int32",
 						},
 					},
+					"invisibleMetrics": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: "",
+										Type:    []string{"string"},
+										Format:  "",
+									},
+								},
+							},
+						},
+					},
 				},
-				Required: []string{"managementState", "forceRedeploymentReason"},
+				Required: []string{"managementState", "forceRedeploymentReason", "invisibleMetrics"},
 			},
 		},
 		Dependencies: []string{
