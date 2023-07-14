@@ -180,7 +180,7 @@ var FeatureSets = map[FeatureSet]*FeatureGateEnabledDisabled{
 		with(automatedEtcdBackup).
 		without(machineAPIOperatorDisableMachineHealthCheckController).
 		with(adminNetworkPolicy).
-		with(egressFirewallDNSName).
+		with(DNSNameResolver).
 		toFeatures(defaultFeatures),
 	LatencySensitive: newDefaultFeatures().
 		toFeatures(defaultFeatures),
