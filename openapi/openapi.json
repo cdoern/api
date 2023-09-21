@@ -20921,6 +20921,152 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference": {
+      "description": "MCOObjectReference holds information about an object the MCO either owns or modifies in some way",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name describes what this object is called",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNode": {
+      "description": "MachineConfigNode describes the health of the Machines on the system Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec",
+        "status"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec describes the configuration of this specific machineconfignode",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpec"
+        },
+        "status": {
+          "description": "status describes the last observed state of this machineconfignode",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeList": {
+      "description": "MachineConfigNodeList describes all of the MachinesStates on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNode"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeSpec": {
+      "description": "MachineConfigNodeSpec describes the type of State we are managing",
+      "type": "object",
+      "required": [
+        "node",
+        "pool",
+        "configVersion"
+      ],
+      "properties": {
+        "configVersion": {
+          "description": "configVersion holds the current and desired config versions for the node targeted by this MachineConfigNode resource. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to when it next has the chance.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigVersion"
+        },
+        "node": {
+          "description": "node contains references to the node for this MachineConfigNode",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
+        },
+        "pool": {
+          "description": "pool contains a reference to the MachineConfigPool that this MachineConfigNode's referenced Node belongs to.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigNodeStatus": {
+      "description": "MachineConfigNodeStatus holds the reported information on a particular MachineConfigNode",
+      "type": "object",
+      "properties": {
+        "conditions": {
+          "description": "conditions represent the observations of a MachineConfigNode's current state. Known .status.conditions.type are: \"UpdatePreparing\", \"UpdateInProgress\", \"UpdatePostAction\", \"UpdateCompleting\", \"Resuming\", \"Updated\", \"Ready\", \"ComparingMCs\", \"DrainingNode\", \"ApplyingFilesAndOS\", \"CordoningNode\", \"RebootingNode\", and \"ReloadingCRIO\"",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "observedGeneration": {
+          "description": "observedGeneration represents the generation observed by the controller.",
+          "type": "integer",
+          "format": "int64"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigVersion": {
+      "description": "ConfigVersion holds the current and desired config versions When Current != Desired; the MachineConfigOperator is in an upgrade phase and the MachineConfigNode will take account of upgrade related events. Oterwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+      "type": "object",
+      "required": [
+        "current",
+        "desired"
+      ],
+      "properties": {
+        "current": {
+          "description": "Current is the current MachineConfig a node is using Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)",
+          "type": "string",
+          "default": ""
+        },
+        "desired": {
+          "description": "Desired is the MachineConfig the node wants to upgrade to. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.monitoring.v1.AlertRelabelConfig": {
       "description": "AlertRelabelConfig defines a set of relabel configs for alerts.\n\nCompatibility level 1: Stable within a major release for a minimum of 12 months or 3 minor releases (whichever is longer).",
       "type": "object",

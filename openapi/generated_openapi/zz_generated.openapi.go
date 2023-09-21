@@ -708,6 +708,12 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                         schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                       schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                          schema_openshift_api_machine_v1beta1_Workspace(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference":                   schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode":                    schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeList":                schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec":                schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":              schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigVersion":                 schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigVersion(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfig":                                   schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigList":                               schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec":                               schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref),
@@ -35952,6 +35958,240 @@ func schema_openshift_api_machine_v1beta1_Workspace(ref common.ReferenceCallback
 						},
 					},
 				},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MCOObjectReference holds information about an object the MCO either owns or modifies in some way",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name describes what this object is called",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigNode describes the health of the Machines on the system Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec describes the configuration of this specific machineconfignode",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status describes the last observed state of this machineconfignode",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus"),
+						},
+					},
+				},
+				Required: []string{"spec", "status"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigNodeList describes all of the MachinesStates on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigNodeSpec describes the type of State we are managing",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"node": {
+						SchemaProps: spec.SchemaProps{
+							Description: "node contains references to the node for this MachineConfigNode",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference"),
+						},
+					},
+					"pool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "pool contains a reference to the MachineConfigPool that this MachineConfigNode's referenced Node belongs to.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference"),
+						},
+					},
+					"configVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "configVersion holds the current and desired config versions for the node targeted by this MachineConfigNode resource. The current version represents the current machine config for the node and is updated after a successful update. The desired version represents the machine config the node will attempt to update to when it next has the chance.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigVersion"),
+						},
+					},
+				},
+				Required: []string{"node", "pool", "configVersion"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigVersion"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineConfigNodeStatus holds the reported information on a particular MachineConfigNode",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions represent the observations of a MachineConfigNode's current state. Known .status.conditions.type are: \"UpdatePreparing\", \"UpdateInProgress\", \"UpdatePostAction\", \"UpdateCompleting\", \"Resuming\", \"Updated\", \"Ready\", \"ComparingMCs\", \"DrainingNode\", \"ApplyingFilesAndOS\", \"CordoningNode\", \"RebootingNode\", and \"ReloadingCRIO\"",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"observedGeneration": {
+						SchemaProps: spec.SchemaProps{
+							Description: "observedGeneration represents the generation observed by the controller.",
+							Type:        []string{"integer"},
+							Format:      "int64",
+						},
+					},
+				},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigVersion(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "ConfigVersion holds the current and desired config versions When Current != Desired; the MachineConfigOperator is in an upgrade phase and the MachineConfigNode will take account of upgrade related events. Oterwise they will be ignored given that certain operations happen both during the MCO's upgrade mode and the daily operations mode.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"current": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Current is the current MachineConfig a node is using Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"desired": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Desired is the MachineConfig the node wants to upgrade to. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"current", "desired"},
 			},
 		},
 	}
