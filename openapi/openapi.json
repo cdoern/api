@@ -27039,9 +27039,16 @@
       "type": "object",
       "required": [
         "managementState",
-        "forceRedeploymentReason"
+        "forceRedeploymentReason",
+        "component",
+        "mode"
       ],
       "properties": {
+        "component": {
+          "description": "component details which part of the MCO this is coming from",
+          "type": "string",
+          "default": ""
+        },
         "failedRevisionLimit": {
           "description": "failedRevisionLimit is the number of failed static pod installer revisions to keep on disk and in the api -1 = unlimited, 0 or unset = 5 (default)",
           "type": "integer",
@@ -27058,6 +27065,11 @@
         },
         "managementState": {
           "description": "managementState indicates whether and how the operator should manage the component",
+          "type": "string",
+          "default": ""
+        },
+        "mode": {
+          "description": "Mode describes if we are talking about this object in cluster or during bootstrap",
           "type": "string",
           "default": ""
         },
@@ -27085,7 +27097,11 @@
     "com.github.openshift.api.operator.v1.MachineConfigurationStatus": {
       "type": "object",
       "required": [
-        "readyReplicas"
+        "readyReplicas",
+        "mostRecentState",
+        "progressionHistory",
+        "mostRecentError",
+        "health"
       ],
       "properties": {
         "conditions": {
@@ -27104,6 +27120,11 @@
             "$ref": "#/definitions/com.github.openshift.api.operator.v1.GenerationStatus"
           }
         },
+        "health": {
+          "description": "health reports the overall status of the MCO given its Progress",
+          "type": "string",
+          "default": ""
+        },
         "latestAvailableRevision": {
           "description": "latestAvailableRevision is the deploymentID of the most recent deployment",
           "type": "integer",
@@ -27112,6 +27133,25 @@
         "latestAvailableRevisionReason": {
           "description": "latestAvailableRevisionReason describe the detailed reason for the most recent deployment",
           "type": "string"
+        },
+        "mostRecentError": {
+          "description": "mostRecentError is populated if the State reports an error.",
+          "type": "string",
+          "default": ""
+        },
+        "mostRecentState": {
+          "description": "mostRecentState is the most recent state reporting for each component",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ProgressionCondition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "objectName"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "objectName",
+          "x-kubernetes-patch-strategy": "merge"
         },
         "nodeStatuses": {
           "description": "nodeStatuses track the deployment values and errors across individual nodes",
@@ -27125,6 +27165,14 @@
           "description": "observedGeneration is the last generation change you've dealt with",
           "type": "integer",
           "format": "int64"
+        },
+        "progressionHistory": {
+          "description": "progressionHistory contains a list of events that have happened on all objects in the MCO",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.operator.v1.ProgressionHistory"
+          }
         },
         "readyReplicas": {
           "description": "readyReplicas indicates how many replicas are ready and at the desired state",
@@ -28117,6 +28165,88 @@
         "protocol": {
           "description": "protocol specifies whether the IngressController expects incoming connections to use plain TCP or whether the IngressController expects PROXY protocol.\n\nPROXY protocol can be used with load balancers that support it to communicate the source addresses of client connections when forwarding those connections to the IngressController.  Using PROXY protocol enables the IngressController to report those source addresses instead of reporting the load balancer's address in HTTP headers and logs.  Note that enabling PROXY protocol on the IngressController will cause connections to fail if you are not using a load balancer that uses PROXY protocol to forward connections to the IngressController.  See http://www.haproxy.org/download/2.2/doc/proxy-protocol.txt for information about PROXY protocol.\n\nThe following values are valid for this field:\n\n* The empty string. * \"TCP\". * \"PROXY\".\n\nThe empty string specifies the default, which is TCP without PROXY protocol.  Note that the default is subject to change.",
           "type": "string"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ProgressionCondition": {
+      "description": "ProgressionCondition is the base struct that contains all information about an event reported from an MCO component",
+      "type": "object",
+      "required": [
+        "kind",
+        "state",
+        "objectName",
+        "phase",
+        "reason",
+        "time"
+      ],
+      "properties": {
+        "kind": {
+          "description": "kind describes the type of object for this condition (node, mcp, etc)",
+          "type": "string",
+          "default": ""
+        },
+        "objectName": {
+          "description": "nameName is the object's name",
+          "type": "string",
+          "default": ""
+        },
+        "phase": {
+          "description": "phase is the general action occuring",
+          "type": "string",
+          "default": ""
+        },
+        "reason": {
+          "description": "reason is a more detailed description of the phase",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state describes what is happening with this object",
+          "type": "string",
+          "default": ""
+        },
+        "time": {
+          "description": "time is the timestamp of this event",
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.operator.v1.ProgressionHistory": {
+      "description": "ProgressionHistory contains the history of an object that exists in a progressioncondition",
+      "type": "object",
+      "required": [
+        "componentAndObject",
+        "state",
+        "objectType",
+        "phase",
+        "reason"
+      ],
+      "properties": {
+        "componentAndObject": {
+          "description": "componentAndObject describes the name of the component and type of object we are dealing with",
+          "type": "string",
+          "default": ""
+        },
+        "objectType": {
+          "description": "objectType describes the type of object",
+          "type": "string",
+          "default": ""
+        },
+        "phase": {
+          "description": "phase is the general action occuring",
+          "type": "string",
+          "default": ""
+        },
+        "reason": {
+          "description": "reason is a more detailed description of the phase",
+          "type": "string",
+          "default": ""
+        },
+        "state": {
+          "description": "state describes what is happening with this component",
+          "type": "string",
+          "default": ""
         }
       }
     },
