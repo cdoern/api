@@ -929,6 +929,7 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.MTUMigration":                                           schema_openshift_api_operator_v1_MTUMigration(ref),
 		"github.com/openshift/api/operator/v1.MTUMigrationValues":                                     schema_openshift_api_operator_v1_MTUMigrationValues(ref),
 		"github.com/openshift/api/operator/v1.MachineConfiguration":                                   schema_openshift_api_operator_v1_MachineConfiguration(ref),
+		"github.com/openshift/api/operator/v1.MachineConfigurationComponent":                          schema_openshift_api_operator_v1_MachineConfigurationComponent(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationList":                               schema_openshift_api_operator_v1_MachineConfigurationList(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationSpec":                               schema_openshift_api_operator_v1_MachineConfigurationSpec(ref),
 		"github.com/openshift/api/operator/v1.MachineConfigurationStatus":                             schema_openshift_api_operator_v1_MachineConfigurationStatus(ref),
@@ -963,8 +964,6 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/operator/v1.PinnedResourceReference":                                schema_openshift_api_operator_v1_PinnedResourceReference(ref),
 		"github.com/openshift/api/operator/v1.PolicyAuditConfig":                                      schema_openshift_api_operator_v1_PolicyAuditConfig(ref),
 		"github.com/openshift/api/operator/v1.PrivateStrategy":                                        schema_openshift_api_operator_v1_PrivateStrategy(ref),
-		"github.com/openshift/api/operator/v1.ProgressionCondition":                                   schema_openshift_api_operator_v1_ProgressionCondition(ref),
-		"github.com/openshift/api/operator/v1.ProgressionHistory":                                     schema_openshift_api_operator_v1_ProgressionHistory(ref),
 		"github.com/openshift/api/operator/v1.ProjectAccess":                                          schema_openshift_api_operator_v1_ProjectAccess(ref),
 		"github.com/openshift/api/operator/v1.ProviderLoadBalancerParameters":                         schema_openshift_api_operator_v1_ProviderLoadBalancerParameters(ref),
 		"github.com/openshift/api/operator/v1.ProxyConfig":                                            schema_openshift_api_operator_v1_ProxyConfig(ref),
@@ -46964,6 +46963,53 @@ func schema_openshift_api_operator_v1_MachineConfiguration(ref common.ReferenceC
 	}
 }
 
+func schema_openshift_api_operator_v1_MachineConfigurationComponent(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Type: []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name represents the full name of this component",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions is the most recent state reporting for each component",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"name", "conditions"},
+			},
+		},
+		Dependencies: []string{
+			"k8s.io/apimachinery/pkg/apis/meta/v1.Condition"},
+	}
+}
+
 func schema_openshift_api_operator_v1_MachineConfigurationList(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -47079,14 +47125,6 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 							Format:      "int32",
 						},
 					},
-					"component": {
-						SchemaProps: spec.SchemaProps{
-							Description: "component details which part of the MCO this is coming from",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
 					"mode": {
 						SchemaProps: spec.SchemaProps{
 							Description: "Mode describes if we are talking about this object in cluster or during bootstrap",
@@ -47096,7 +47134,7 @@ func schema_openshift_api_operator_v1_MachineConfigurationSpec(ref common.Refere
 						},
 					},
 				},
-				Required: []string{"managementState", "forceRedeploymentReason", "component", "mode"},
+				Required: []string{"managementState", "forceRedeploymentReason", "mode"},
 			},
 		},
 		Dependencies: []string{
@@ -47188,42 +47226,25 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 							},
 						},
 					},
-					"mostRecentState": {
-						VendorExtensible: spec.VendorExtensible{
-							Extensions: spec.Extensions{
-								"x-kubernetes-list-map-keys": []interface{}{
-									"objectName",
-								},
-								"x-kubernetes-list-type":       "map",
-								"x-kubernetes-patch-merge-key": "objectName",
-								"x-kubernetes-patch-strategy":  "merge",
-							},
-						},
+					"daemon": {
 						SchemaProps: spec.SchemaProps{
-							Description: "mostRecentState is the most recent state reporting for each component",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.ProgressionCondition"),
-									},
-								},
-							},
+							Description: "daemon describes the most recent progression of the MCD pods",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
 						},
 					},
-					"progressionHistory": {
+					"controller": {
 						SchemaProps: spec.SchemaProps{
-							Description: "progressionHistory contains a list of events that have happened on all objects in the MCO",
-							Type:        []string{"array"},
-							Items: &spec.SchemaOrArray{
-								Schema: &spec.Schema{
-									SchemaProps: spec.SchemaProps{
-										Default: map[string]interface{}{},
-										Ref:     ref("github.com/openshift/api/operator/v1.ProgressionHistory"),
-									},
-								},
-							},
+							Description: "controller describes the most recent progression of the MCC pods",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
+						},
+					},
+					"operator": {
+						SchemaProps: spec.SchemaProps{
+							Description: "operator describes the most recent progression of the MCO pod",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/operator/v1.MachineConfigurationComponent"),
 						},
 					},
 					"mostRecentError": {
@@ -47243,11 +47264,11 @@ func schema_openshift_api_operator_v1_MachineConfigurationStatus(ref common.Refe
 						},
 					},
 				},
-				Required: []string{"readyReplicas", "mostRecentState", "progressionHistory", "mostRecentError", "health"},
+				Required: []string{"readyReplicas", "daemon", "controller", "operator", "mostRecentError", "health"},
 			},
 		},
 		Dependencies: []string{
-			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition", "github.com/openshift/api/operator/v1.ProgressionCondition", "github.com/openshift/api/operator/v1.ProgressionHistory"},
+			"github.com/openshift/api/operator/v1.GenerationStatus", "github.com/openshift/api/operator/v1.MachineConfigurationComponent", "github.com/openshift/api/operator/v1.NodeStatus", "github.com/openshift/api/operator/v1.OperatorCondition"},
 	}
 }
 
@@ -48869,123 +48890,6 @@ func schema_openshift_api_operator_v1_PrivateStrategy(ref common.ReferenceCallba
 						},
 					},
 				},
-			},
-		},
-	}
-}
-
-func schema_openshift_api_operator_v1_ProgressionCondition(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProgressionCondition is the base struct that contains all information about an event reported from an MCO component",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"kind": {
-						SchemaProps: spec.SchemaProps{
-							Description: "kind describes the type of object for this condition (node, mcp, etc)",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"state": {
-						SchemaProps: spec.SchemaProps{
-							Description: "state describes what is happening with this object",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"objectName": {
-						SchemaProps: spec.SchemaProps{
-							Description: "nameName is the object's name",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"phase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "phase is the general action occuring",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "reason is a more detailed description of the phase",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"time": {
-						SchemaProps: spec.SchemaProps{
-							Description: "time is the timestamp of this event",
-							Default:     map[string]interface{}{},
-							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
-						},
-					},
-				},
-				Required: []string{"kind", "state", "objectName", "phase", "reason", "time"},
-			},
-		},
-		Dependencies: []string{
-			"k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
-	}
-}
-
-func schema_openshift_api_operator_v1_ProgressionHistory(ref common.ReferenceCallback) common.OpenAPIDefinition {
-	return common.OpenAPIDefinition{
-		Schema: spec.Schema{
-			SchemaProps: spec.SchemaProps{
-				Description: "ProgressionHistory contains the history of an object that exists in a progressioncondition",
-				Type:        []string{"object"},
-				Properties: map[string]spec.Schema{
-					"componentAndObject": {
-						SchemaProps: spec.SchemaProps{
-							Description: "componentAndObject describes the name of the component and type of object we are dealing with",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"state": {
-						SchemaProps: spec.SchemaProps{
-							Description: "state describes what is happening with this component",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"objectType": {
-						SchemaProps: spec.SchemaProps{
-							Description: "objectType describes the type of object",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"phase": {
-						SchemaProps: spec.SchemaProps{
-							Description: "phase is the general action occuring",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-					"reason": {
-						SchemaProps: spec.SchemaProps{
-							Description: "reason is a more detailed description of the phase",
-							Default:     "",
-							Type:        []string{"string"},
-							Format:      "",
-						},
-					},
-				},
-				Required: []string{"componentAndObject", "state", "objectType", "phase", "reason"},
 			},
 		},
 	}
