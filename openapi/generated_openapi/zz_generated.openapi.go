@@ -748,6 +748,8 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderSpec":                                schema_openshift_api_machine_v1beta1_VSphereMachineProviderSpec(ref),
 		"github.com/openshift/api/machine/v1beta1.VSphereMachineProviderStatus":                              schema_openshift_api_machine_v1beta1_VSphereMachineProviderStatus(ref),
 		"github.com/openshift/api/machine/v1beta1.Workspace":                                                 schema_openshift_api_machine_v1beta1_Workspace(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.BuildInputs":                                 schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference":                  schema_openshift_api_machineconfiguration_v1alpha1_ImageSecretObjectReference(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MCOObjectReference":                          schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNode":                           schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNode(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeList":                       schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeList(ref),
@@ -755,6 +757,14 @@ func GetOpenAPIDefinitions(ref common.ReferenceCallback) map[string]common.OpenA
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeSpecMachineConfigVersion":   schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeSpecMachineConfigVersion(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatus":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatus(ref),
 		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigNodeStatusMachineConfigVersion": schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusMachineConfigVersion(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigPoolReference":                  schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigPoolReference(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuild":                              schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuild(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildList":                          schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildList(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildSpec":                          schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildSpec(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildStatus":                        schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildStatus(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageReference":                     schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageReference(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.PriorMachineOSBuilds":                        schema_openshift_api_machineconfiguration_v1alpha1_PriorMachineOSBuilds(ref),
+		"github.com/openshift/api/machineconfiguration/v1alpha1.RenderedMachineConfigReference":              schema_openshift_api_machineconfiguration_v1alpha1_RenderedMachineConfigReference(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfig":                                          schema_openshift_api_monitoring_v1_AlertRelabelConfig(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigList":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigList(ref),
 		"github.com/openshift/api/monitoring/v1.AlertRelabelConfigSpec":                                      schema_openshift_api_monitoring_v1_AlertRelabelConfigSpec(ref),
@@ -38263,6 +38273,97 @@ func schema_openshift_api_machine_v1beta1_Workspace(ref common.ReferenceCallback
 	}
 }
 
+func schema_openshift_api_machineconfiguration_v1alpha1_BuildInputs(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "BuildInputs holds all of the information needed to trigger a build",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"imageBuilderType": {
+						SchemaProps: spec.SchemaProps{
+							Description: "imageBuilderType specifies the backend to be used to build the image. Valid options are: OpenShiftImageBuilder, PodImageBuilder, and Default (OpenShiftImageBuilder)",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"baseOSImageURL": {
+						SchemaProps: spec.SchemaProps{
+							Description: "baseOSImageURL is the base OSImage we use to build our custom image.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"baseImagePullSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "baseImagePullSecret is the secret used to pull the base image.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"finalImagePushSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "finalImagePushSecret is the secret used to connect to a user registry.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference"),
+						},
+					},
+					"finalImagePullSecret": {
+						SchemaProps: spec.SchemaProps{
+							Description: "finalImagePullSecret is the secret used to pull the final produced image.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference"),
+						},
+					},
+					"containerFile": {
+						SchemaProps: spec.SchemaProps{
+							Description: "containerFile describes the custom data the user has specified to build into the image.",
+							Type:        []string{"string"},
+							Format:      "byte",
+						},
+					},
+					"finalImagePullspec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "finalImagePullspec describes the location of the final image.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"imageBuilderType", "baseOSImageURL", "baseImagePullSecret", "finalImagePushSecret", "finalImagePullSecret", "finalImagePullspec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.ImageSecretObjectReference"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_ImageSecretObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Refers to the name of an image registry push/pull secret needed in the build process.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the referenced object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
 func schema_openshift_api_machineconfiguration_v1alpha1_MCOObjectReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
 	return common.OpenAPIDefinition{
 		Schema: spec.Schema{
@@ -38522,6 +38623,325 @@ func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigNodeStatusM
 					},
 				},
 				Required: []string{"desired"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineConfigPoolReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Refers to the name of a MachineConfigPool (e.g., \"worker\", \"infra\", etc.):",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the referenced object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuild(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSBuild describes a build process managed by the MCO Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"),
+						},
+					},
+					"spec": {
+						SchemaProps: spec.SchemaProps{
+							Description: "spec describes the configuration of the machine os build",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildSpec"),
+						},
+					},
+					"status": {
+						SchemaProps: spec.SchemaProps{
+							Description: "status describes the lst observed state of this machine os build",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildStatus"),
+						},
+					},
+				},
+				Required: []string{"spec"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildSpec", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuildStatus", "k8s.io/apimachinery/pkg/apis/meta/v1.ObjectMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildList(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSBuildList describes all of the Builds on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"kind": {
+						SchemaProps: spec.SchemaProps{
+							Description: "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"apiVersion": {
+						SchemaProps: spec.SchemaProps{
+							Description: "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"metadata": {
+						SchemaProps: spec.SchemaProps{
+							Default: map[string]interface{}{},
+							Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"),
+						},
+					},
+					"items": {
+						SchemaProps: spec.SchemaProps{
+							Type: []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuild"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"metadata", "items"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSBuild", "k8s.io/apimachinery/pkg/apis/meta/v1.ListMeta"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildSpec(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSBuildSpec describes user-configurable options as well as information about a build process.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"machineConfigPool": {
+						SchemaProps: spec.SchemaProps{
+							Description: "machineConfigPool is the pool which the build is for",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigPoolReference"),
+						},
+					},
+					"buildInputs": {
+						SchemaProps: spec.SchemaProps{
+							Description: "buildInputs is where user options for the build live",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.BuildInputs"),
+						},
+					},
+					"currentConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "currentConfig is the currently running config on the MCP",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"desiredConfig": {
+						SchemaProps: spec.SchemaProps{
+							Description: "desiredConfig is the desired config we want to build an image for. If currentConfig and desiredConfig are not the same, we need to build an image.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"machineConfigPool", "buildInputs", "desiredConfig"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.BuildInputs", "github.com/openshift/api/machineconfiguration/v1alpha1.MachineConfigPoolReference"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSBuildStatus(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "MachineOSBuildStatus describes the state of a build and other helpful information.",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"conditions": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-map-keys": []interface{}{
+									"type",
+								},
+								"x-kubernetes-list-type":       "map",
+								"x-kubernetes-patch-merge-key": "type",
+								"x-kubernetes-patch-strategy":  "merge",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "conditions are state related conditions for the build. Valid types are: BuildPrepared, Building, BuildFailed, BuildInterrupted, BuildRestarted, and Ready",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("k8s.io/apimachinery/pkg/apis/meta/v1.Condition"),
+									},
+								},
+							},
+						},
+					},
+					"renderedMachineOSImage": {
+						SchemaProps: spec.SchemaProps{
+							Description: "renderedMachineOSImage describes the machineOsImage object created to track image specific information machineConfig is a reference to the MC that was used to build this image.",
+							Default:     map[string]interface{}{},
+							Ref:         ref("github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageReference"),
+						},
+					},
+					"startTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "startTime describes when this build began",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"endTime": {
+						SchemaProps: spec.SchemaProps{
+							Description: "endTime describes when the build ended",
+							Ref:         ref("k8s.io/apimachinery/pkg/apis/meta/v1.Time"),
+						},
+					},
+					"buildHistory": {
+						VendorExtensible: spec.VendorExtensible{
+							Extensions: spec.Extensions{
+								"x-kubernetes-list-type": "set",
+							},
+						},
+						SchemaProps: spec.SchemaProps{
+							Description: "buildHistory contains previous iterations of failed or interrupted builds related to this one. This will keep track of failed or interrupted build names I am thinking we keep track of their name and why they failed",
+							Type:        []string{"array"},
+							Items: &spec.SchemaOrArray{
+								Schema: &spec.Schema{
+									SchemaProps: spec.SchemaProps{
+										Default: map[string]interface{}{},
+										Ref:     ref("github.com/openshift/api/machineconfiguration/v1alpha1.PriorMachineOSBuilds"),
+									},
+								},
+							},
+						},
+					},
+				},
+				Required: []string{"startTime"},
+			},
+		},
+		Dependencies: []string{
+			"github.com/openshift/api/machineconfiguration/v1alpha1.MachineOSImageReference", "github.com/openshift/api/machineconfiguration/v1alpha1.PriorMachineOSBuilds", "k8s.io/apimachinery/pkg/apis/meta/v1.Condition", "k8s.io/apimachinery/pkg/apis/meta/v1.Time"},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_MachineOSImageReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Refers to the name of a (future) MachineOSImage (e.g., \"worker-os-image-167651b10ec98af17971d6a47df9e22f\", etc.):",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the referenced object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_PriorMachineOSBuilds(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "PriorMachineOSBuilds contains information about related builds",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the build",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+					"buildFailure": {
+						SchemaProps: spec.SchemaProps{
+							Description: "buildFailure contains an optional message of why this build ended prematurely.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
+			},
+		},
+	}
+}
+
+func schema_openshift_api_machineconfiguration_v1alpha1_RenderedMachineConfigReference(ref common.ReferenceCallback) common.OpenAPIDefinition {
+	return common.OpenAPIDefinition{
+		Schema: spec.Schema{
+			SchemaProps: spec.SchemaProps{
+				Description: "Refers to the name of a rendered MachineConfig (e.g., \"rendered-worker-ec40d2965ff81bce7cd7a7e82a680739\", etc.):",
+				Type:        []string{"object"},
+				Properties: map[string]spec.Schema{
+					"name": {
+						SchemaProps: spec.SchemaProps{
+							Description: "name is the name of the referenced object.",
+							Default:     "",
+							Type:        []string{"string"},
+							Format:      "",
+						},
+					},
+				},
+				Required: []string{"name"},
 			},
 		},
 	}

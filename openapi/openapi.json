@@ -22189,6 +22189,69 @@
         }
       }
     },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.BuildInputs": {
+      "description": "BuildInputs holds all of the information needed to trigger a build",
+      "type": "object",
+      "required": [
+        "imageBuilderType",
+        "baseOSImageURL",
+        "baseImagePullSecret",
+        "finalImagePushSecret",
+        "finalImagePullSecret",
+        "finalImagePullspec"
+      ],
+      "properties": {
+        "baseImagePullSecret": {
+          "description": "baseImagePullSecret is the secret used to pull the base image.",
+          "type": "string",
+          "default": ""
+        },
+        "baseOSImageURL": {
+          "description": "baseOSImageURL is the base OSImage we use to build our custom image.",
+          "type": "string",
+          "default": ""
+        },
+        "containerFile": {
+          "description": "containerFile describes the custom data the user has specified to build into the image.",
+          "type": "string",
+          "format": "byte"
+        },
+        "finalImagePullSecret": {
+          "description": "finalImagePullSecret is the secret used to pull the final produced image.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.ImageSecretObjectReference"
+        },
+        "finalImagePullspec": {
+          "description": "finalImagePullspec describes the location of the final image.",
+          "type": "string",
+          "default": ""
+        },
+        "finalImagePushSecret": {
+          "description": "finalImagePushSecret is the secret used to connect to a user registry.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.ImageSecretObjectReference"
+        },
+        "imageBuilderType": {
+          "description": "imageBuilderType specifies the backend to be used to build the image. Valid options are: OpenShiftImageBuilder, PodImageBuilder, and Default (OpenShiftImageBuilder)",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.ImageSecretObjectReference": {
+      "description": "Refers to the name of an image registry push/pull secret needed in the build process.",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the referenced object.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
     "com.github.openshift.api.machineconfiguration.v1alpha1.MCOObjectReference": {
       "description": "MCOObjectReference holds information about an object the MCO either owns or modifies in some way",
       "type": "object",
@@ -22350,6 +22413,203 @@
         },
         "desired": {
           "description": "desired is the MachineConfig the node wants to upgrade to. This value gets set in the machine config node status once the machine config has been validated against the current machine config. Must be a lowercase RFC-1123 hostname (https://tools.ietf.org/html/rfc1123) It may consist of only alphanumeric characters, hyphens (-) and periods (.) and must be at most 253 characters in length.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigPoolReference": {
+      "description": "Refers to the name of a MachineConfigPool (e.g., \"worker\", \"infra\", etc.):",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the referenced object.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuild": {
+      "description": "MachineOSBuild describes a build process managed by the MCO Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "spec"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ObjectMeta"
+        },
+        "spec": {
+          "description": "spec describes the configuration of the machine os build",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuildSpec"
+        },
+        "status": {
+          "description": "status describes the lst observed state of this machine os build",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuildStatus"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuildList": {
+      "description": "MachineOSBuildList describes all of the Builds on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+      "type": "object",
+      "required": [
+        "metadata",
+        "items"
+      ],
+      "properties": {
+        "apiVersion": {
+          "description": "APIVersion defines the versioned schema of this representation of an object. Servers should convert recognized schemas to the latest internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources",
+          "type": "string"
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuild"
+          }
+        },
+        "kind": {
+          "description": "Kind is a string value representing the REST resource this object represents. Servers may infer this from the endpoint the client submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds",
+          "type": "string"
+        },
+        "metadata": {
+          "default": {},
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.ListMeta"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuildSpec": {
+      "description": "MachineOSBuildSpec describes user-configurable options as well as information about a build process.",
+      "type": "object",
+      "required": [
+        "machineConfigPool",
+        "buildInputs",
+        "desiredConfig"
+      ],
+      "properties": {
+        "buildInputs": {
+          "description": "buildInputs is where user options for the build live",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.BuildInputs"
+        },
+        "currentConfig": {
+          "description": "currentConfig is the currently running config on the MCP",
+          "type": "string",
+          "default": ""
+        },
+        "desiredConfig": {
+          "description": "desiredConfig is the desired config we want to build an image for. If currentConfig and desiredConfig are not the same, we need to build an image.",
+          "type": "string",
+          "default": ""
+        },
+        "machineConfigPool": {
+          "description": "machineConfigPool is the pool which the build is for",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineConfigPoolReference"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSBuildStatus": {
+      "description": "MachineOSBuildStatus describes the state of a build and other helpful information.",
+      "type": "object",
+      "required": [
+        "startTime"
+      ],
+      "properties": {
+        "buildHistory": {
+          "description": "buildHistory contains previous iterations of failed or interrupted builds related to this one. This will keep track of failed or interrupted build names I am thinking we keep track of their name and why they failed",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.PriorMachineOSBuilds"
+          },
+          "x-kubernetes-list-type": "set"
+        },
+        "conditions": {
+          "description": "conditions are state related conditions for the build. Valid types are: BuildPrepared, Building, BuildFailed, BuildInterrupted, BuildRestarted, and Ready",
+          "type": "array",
+          "items": {
+            "default": {},
+            "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Condition"
+          },
+          "x-kubernetes-list-map-keys": [
+            "type"
+          ],
+          "x-kubernetes-list-type": "map",
+          "x-kubernetes-patch-merge-key": "type",
+          "x-kubernetes-patch-strategy": "merge"
+        },
+        "endTime": {
+          "description": "endTime describes when the build ended",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        },
+        "renderedMachineOSImage": {
+          "description": "renderedMachineOSImage describes the machineOsImage object created to track image specific information machineConfig is a reference to the MC that was used to build this image.",
+          "default": {},
+          "$ref": "#/definitions/com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageReference"
+        },
+        "startTime": {
+          "description": "startTime describes when this build began",
+          "$ref": "#/definitions/io.k8s.apimachinery.pkg.apis.meta.v1.Time"
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.MachineOSImageReference": {
+      "description": "Refers to the name of a (future) MachineOSImage (e.g., \"worker-os-image-167651b10ec98af17971d6a47df9e22f\", etc.):",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the referenced object.",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.PriorMachineOSBuilds": {
+      "description": "PriorMachineOSBuilds contains information about related builds",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "buildFailure": {
+          "description": "buildFailure contains an optional message of why this build ended prematurely.",
+          "type": "string",
+          "default": ""
+        },
+        "name": {
+          "description": "name is the name of the build",
+          "type": "string",
+          "default": ""
+        }
+      }
+    },
+    "com.github.openshift.api.machineconfiguration.v1alpha1.RenderedMachineConfigReference": {
+      "description": "Refers to the name of a rendered MachineConfig (e.g., \"rendered-worker-ec40d2965ff81bce7cd7a7e82a680739\", etc.):",
+      "type": "object",
+      "required": [
+        "name"
+      ],
+      "properties": {
+        "name": {
+          "description": "name is the name of the referenced object.",
           "type": "string",
           "default": ""
         }

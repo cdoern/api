@@ -79,4 +79,108 @@ func (MachineConfigNodeStatusMachineConfigVersion) SwaggerDoc() map[string]strin
 	return map_MachineConfigNodeStatusMachineConfigVersion
 }
 
+var map_BuildInputs = map[string]string{
+	"":                     "BuildInputs holds all of the information needed to trigger a build",
+	"imageBuilderType":     "imageBuilderType specifies the backend to be used to build the image. Valid options are: OpenShiftImageBuilder, PodImageBuilder, and Default (OpenShiftImageBuilder)",
+	"baseOSImageURL":       "baseOSImageURL is the base OSImage we use to build our custom image.",
+	"baseImagePullSecret":  "baseImagePullSecret is the secret used to pull the base image.",
+	"finalImagePushSecret": "finalImagePushSecret is the secret used to connect to a user registry.",
+	"finalImagePullSecret": "finalImagePullSecret is the secret used to pull the final produced image.",
+	"containerFile":        "containerFile describes the custom data the user has specified to build into the image.",
+	"finalImagePullspec":   "finalImagePullspec describes the location of the final image.",
+}
+
+func (BuildInputs) SwaggerDoc() map[string]string {
+	return map_BuildInputs
+}
+
+var map_ImageSecretObjectReference = map[string]string{
+	"":     "Refers to the name of an image registry push/pull secret needed in the build process.",
+	"name": "name is the name of the referenced object.",
+}
+
+func (ImageSecretObjectReference) SwaggerDoc() map[string]string {
+	return map_ImageSecretObjectReference
+}
+
+var map_MachineConfigPoolReference = map[string]string{
+	"":     "Refers to the name of a MachineConfigPool (e.g., \"worker\", \"infra\", etc.):",
+	"name": "name is the name of the referenced object.",
+}
+
+func (MachineConfigPoolReference) SwaggerDoc() map[string]string {
+	return map_MachineConfigPoolReference
+}
+
+var map_MachineOSBuild = map[string]string{
+	"":       "MachineOSBuild describes a build process managed by the MCO Compatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+	"spec":   "spec describes the configuration of the machine os build",
+	"status": "status describes the lst observed state of this machine os build",
+}
+
+func (MachineOSBuild) SwaggerDoc() map[string]string {
+	return map_MachineOSBuild
+}
+
+var map_MachineOSBuildList = map[string]string{
+	"": "MachineOSBuildList describes all of the Builds on the system\n\nCompatibility level 4: No compatibility is provided, the API can change at any point for any reason. These capabilities should not be used by applications needing long term support.",
+}
+
+func (MachineOSBuildList) SwaggerDoc() map[string]string {
+	return map_MachineOSBuildList
+}
+
+var map_MachineOSBuildSpec = map[string]string{
+	"":                  "MachineOSBuildSpec describes user-configurable options as well as information about a build process.",
+	"machineConfigPool": "machineConfigPool is the pool which the build is for",
+	"buildInputs":       "buildInputs is where user options for the build live",
+	"currentConfig":     "currentConfig is the currently running config on the MCP",
+	"desiredConfig":     "desiredConfig is the desired config we want to build an image for. If currentConfig and desiredConfig are not the same, we need to build an image.",
+}
+
+func (MachineOSBuildSpec) SwaggerDoc() map[string]string {
+	return map_MachineOSBuildSpec
+}
+
+var map_MachineOSBuildStatus = map[string]string{
+	"":                       "MachineOSBuildStatus describes the state of a build and other helpful information.",
+	"conditions":             "conditions are state related conditions for the build. Valid types are: BuildPrepared, Building, BuildFailed, BuildInterrupted, BuildRestarted, and Ready",
+	"renderedMachineOSImage": "renderedMachineOSImage describes the machineOsImage object created to track image specific information machineConfig is a reference to the MC that was used to build this image.",
+	"startTime":              "startTime describes when this build began",
+	"endTime":                "endTime describes when the build ended",
+	"buildHistory":           "buildHistory contains previous iterations of failed or interrupted builds related to this one. This will keep track of failed or interrupted build names I am thinking we keep track of their name and why they failed",
+}
+
+func (MachineOSBuildStatus) SwaggerDoc() map[string]string {
+	return map_MachineOSBuildStatus
+}
+
+var map_MachineOSImageReference = map[string]string{
+	"":     "Refers to the name of a (future) MachineOSImage (e.g., \"worker-os-image-167651b10ec98af17971d6a47df9e22f\", etc.):",
+	"name": "name is the name of the referenced object.",
+}
+
+func (MachineOSImageReference) SwaggerDoc() map[string]string {
+	return map_MachineOSImageReference
+}
+
+var map_PriorMachineOSBuilds = map[string]string{
+	"":             "PriorMachineOSBuilds contains information about related builds",
+	"name":         "name is the name of the build",
+	"buildFailure": "buildFailure contains an optional message of why this build ended prematurely.",
+}
+
+func (PriorMachineOSBuilds) SwaggerDoc() map[string]string {
+	return map_PriorMachineOSBuilds
+}
+
+var map_RenderedMachineConfigReference = map[string]string{
+	"":     "Refers to the name of a rendered MachineConfig (e.g., \"rendered-worker-ec40d2965ff81bce7cd7a7e82a680739\", etc.):",
+	"name": "name is the name of the referenced object.",
+}
+
+func (RenderedMachineConfigReference) SwaggerDoc() map[string]string {
+	return map_RenderedMachineConfigReference
+}
+
 // AUTO-GENERATED FUNCTIONS END HERE
