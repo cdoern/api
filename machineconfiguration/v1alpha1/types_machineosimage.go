@@ -55,9 +55,6 @@ type MachineOSImageSpec struct {
 
 // MachineOSImageStatus contains state ralted information about an image.
 type MachineOSImageStatus struct {
-	// observedGeneration represents the generation observed by the controller.
-	// +kubebuilder:validation:Required
-	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// conditions contains status conditions related to the image.
 	// +patchMergeKey=type
 	// +patchStrategy=merge
@@ -65,6 +62,9 @@ type MachineOSImageStatus struct {
 	// +listMapKey=type
 	// +optional
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+	// observedGeneration represents the generation observed by the controller.
+	// +kubebuilder:validation:Required
+	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// age is how long the image has existed
 	// +kubebuilder:validation:Required
 	Age metav1.Duration `json:"age"`
